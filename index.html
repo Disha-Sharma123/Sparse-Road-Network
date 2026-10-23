@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparse Matrix Analyzer | Road Network</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">SM</div>
+      <div>
+        <h1>Sparse Matrix<br>Analyzer</h1>
+        <small>ROAD NETWORK LAB</small>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-label">WORKSPACE</div>
+      <div class="nav-item active">▦ &nbsp; Matrix Overview</div>
+      <div class="nav-item">⠿ &nbsp; COO Representation</div>
+      <div class="nav-item">⇄ &nbsp; Linked-List View</div>
+      <div class="nav-item">⌘ &nbsp; Operations & Testing</div>
+    </div>
+
+    <div>
+      <div class="nav-label">PROJECT DETAILS</div>
+      <div class="nav-item">◈ &nbsp; Undirected weighted graph</div>
+      <div class="nav-item">▤ &nbsp; Distance unit: kilometres</div>
+    </div>
+
+    <div class="side-note">
+      <strong>Representation note</strong>
+      COO stores each nonzero entry as a row, column and value.
+      The linked-list view shows how these triplets can be connected
+      using nodes and next pointers.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <strong>Sparse Matrix Analyzer</strong>
+      </div>
+      <div class="top-right">
+        <span class="status"><span class="dot"></span> Interactive demo</span>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page-head">
+        <div>
+          <div class="eyebrow">DATA STRUCTURES · GRAPH REPRESENTATION</div>
+          <h2>Sparse Matrix Analyzer</h2>
+          <p>
+            Explore road connectivity, COO triplets and linked-list
+            storage through interactive operations.
+          </p>
+        </div>
+        <button class="btn" id="resetBtn">↺ Reset network</button>
+      </section>
+
+      <section class="metrics">
+        <div class="metric">
+          <div class="metric-top">INTERSECTIONS</div>
+          <div class="metric-value" id="verticesCount">5</div>
+          <div class="metric-sub">Vertices in the network</div>
+        </div>
+        <div class="metric">
+          <div class="metric-top">NONZERO ENTRIES</div>
+          <div class="metric-value" id="nonzeroCount">8</div>
+          <div class="metric-sub">Directed matrix entries</div>
+        </div>
+        <div class="metric">
+          <div class="metric-top">SPARSE DENSITY</div>
+          <div class="metric-value" id="densityValue">32.0%</div>
+          <div class="metric-sub">Nonzero entries / all entries</div>
+        </div>
+        <div class="metric">
+          <div class="metric-top">ZERO ENTRIES</div>
+          <div class="metric-value" id="storageValue">68.0%</div>
+          <div class="metric-sub">Share of matrix cells that are zero</div>
+        </div>
+      </section>
+
+      <div class="columns">
+        <div>
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Adjacency Matrix</h3>
+                <div class="panel-desc">
+                  Road distance between each pair of intersections
+                </div>
+              </div>
+              <span class="tag">5 × 5 MATRIX</span>
+            </div>
+            <div class="panel-body">
+              <div class="matrix-wrap">
+                <table class="matrix" id="matrixTable"></table>
+              </div>
+              <div class="legend">
+                <span><i class="swatch"></i> Road exists</span>
+                <span><i class="swatch zero"></i> No direct road (0)</span>
+              </div>
+              <div class="matrix-foot">
+                <span>Rows: source</span>
+                <span>Columns: destination</span>
+                <span class="mini-pill">Unit: km</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">COO / Triplet Representation</h3>
+                <div class="panel-desc">
+                  Each nonzero entry is stored as (row, column, value)
+                </div>
+              </div>
+              <span class="tag" id="tripletCountTag">8 TRIPLETS</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th><th>Row</th><th>Column</th>
+                    <th>Road</th><th>Distance</th>
+                  </tr>
+                </thead>
+                <tbody id="tripletBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Linked-List Node View</h3>
+                <div class="panel-desc">
+                  Each node stores row, column, value and a next pointer
+                </div>
+              </div>
+              <span class="tag">NODE CHAIN</span>
+            </div>
+            <div class="panel-body">
+              <div class="nodes" id="linkedNodes"></div>
+              <div class="node-caption">
+                Conceptual node layout. Arrows represent next pointers,
+                not actual RAM addresses.
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div>
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Road Operations</h3>
+                <div class="panel-desc">
+                  Select intersections and perform an operation
+                </div>
+              </div>
+              <span class="tag">LIVE</span>
+            </div>
+            <div class="panel-body">
+              <div class="ops-grid">
+                <div class="field">
+                  <label for="fromNode">FROM INTERSECTION</label>
+                  <select id="fromNode"></select>
+                </div>
+                <div class="field">
+                  <label for="toNode">TO INTERSECTION</label>
+                  <select id="toNode"></select>
+                </div>
+                <div class="field full">
+                  <label for="distanceInput">DISTANCE (KM)</label>
+                  <input id="distanceInput" type="number" min="1"
+                         step="1" placeholder="Enter positive distance">
+                </div>
+              </div>
+
+              <div class="op-buttons">
+                <button class="btn primary" id="insertBtn">＋ Insert</button>
+                <button class="btn" id="updateBtn">↻ Update</button>
+                <button class="btn danger" id="deleteBtn">− Delete</button>
+                <button class="btn" id="searchBtn">⌕ Search</button>
+              </div>
+              <div id="resultBox" class="result" role="status"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Conversion & Validation</h3>
+                <div class="panel-desc">
+                  Convert between the matrix and COO representation
+                </div>
+              </div>
+            </div>
+            <div class="panel-body conversion-buttons">
+              <button class="btn primary full" id="convertBtn">
+                Matrix → COO triplets
+              </button>
+              <button class="btn full" id="reconstructBtn">
+                Reconstruct matrix from COO
+              </button>
+              <div id="conversionResult" class="result" role="status"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Operation History</h3>
+                <div class="panel-desc">Recent actions in this session</div>
+              </div>
+              <button class="btn" id="clearHistoryBtn">Clear</button>
+            </div>
+            <div class="panel-body">
+              <div class="history" id="historyList"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Storage figures describe zero and nonzero matrix cells, not actual memory usage.</span>
+        <span>Academic project · Sparse data representation</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
