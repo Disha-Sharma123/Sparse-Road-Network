@@ -46,7 +46,7 @@ Sparse-Road-Network/
 | File | Description |
 |---|---|
 | `README.md` | Project overview, instructions, and documentation |
-| `Parse Road Network.c` | C implementation of the Sparse Road Network |
+| `sparse_road_network.c` | C implementation of the Sparse Road Network |
 | `index.html` | Structure of the visualizer webpage |
 | `style.css` | Styling and layout of the visualizer |
 | `script.js` | Interactive functionality of the visualizer |
@@ -69,7 +69,7 @@ Make sure GCC is installed on your system.
 3. Compile the program:
 
    ```bash
-   gcc "sparse_road_network.c" -o sparse_road_network
+   gcc sparse_road_network.c -o sparse_road_network
    ```
 
 4. Run the compiled program.
